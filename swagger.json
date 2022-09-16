@@ -1,0 +1,92 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "send-sms-api",
+    "description": "For sending sms using villa",
+    "contact": {
+      "email": "nwanavit@tenxor.sh"
+    },
+    "version": "1.1"
+  },
+  "servers": [
+    {
+      "url": "https://rxqezebd98.execute-api.ap-southeast-1.amazonaws.com",
+      "description": "villa-sms-server"
+    }
+  ],
+  "security": [
+    {
+      "awsSigV4": []
+    }
+  ],
+  "paths": {
+    "/Prod/sendSms": {
+      "post": {
+        "summary": "send sms",
+        "description": "send sms to a phone",
+        "operationId": "sendSms",
+        "requestBody": {
+          "description": "send sms to users, required",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendSms"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "sending success"
+          },
+          "400": {
+            "description": "something is wrong, please check error message"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SendSms": {
+        "required": [
+          "message",
+          "phoneNumber",
+          "referenceId",
+          "subject"
+        ],
+        "type": "object",
+        "properties": {
+          "subject": {
+            "type": "string",
+            "description": "REQUIRED Subjects must be ASCII text that begins with a letter, number, or punctuation mark; must not include line breaks or control characters; and must be less than 100 characters long.",
+            "example": "test subject"
+          },
+          "message": {
+            "type": "string",
+            "description": "REQUIRED The message you want to send. each message can contain up to 140 characters. This character limit depends on the encoding schema. For example, an SMS message can contain 160 GSM characters, 140 ASCII characters, or 70 UCS-2 characters. If you publish a message that exceeds this size limit, Amazon SNS sends the message as multiple messages, each fitting within the size limit. Messages aren't truncated mid-word but are cut off at whole-word boundaries. The total size limit for a single SMS Publish action is 1,600 characters.",
+            "example": "test message"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "description": "REQUIRED The phone number to which you want to deliver an SMS message. Use E.164 format.",
+            "example": "+16282079687"
+          },
+          "referenceId": {
+            "type": "string",
+            "description": "REQUIRED this is for reference and will be used as hash key for the cache",
+            "example": "gb12345"
+          }
+        },
+        "description": "send sms"
+      }
+    },
+    "securitySchemes": {
+      "awsSigV4": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header"
+      }
+    }
+  }
+}
